@@ -1,0 +1,10 @@
+target/
+build/
+dist/
+node_modules/
+
+.idea/
+.vscode/
+*.iml
+package-lock.json
+*.db
