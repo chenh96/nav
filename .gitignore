@@ -2,6 +2,7 @@ target/
 build/
 dist/
 node_modules/
+dev-dist/
 
 .idea/
 .vscode/
