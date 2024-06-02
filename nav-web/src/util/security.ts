@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Setter } from './type'
-import { requestPost, clearCache } from './request'
+import { useState } from 'react'
+import { requestPost } from './request'
 
 export const TOKEN_REQUEST_KEY = 'Token'
 
@@ -14,26 +13,23 @@ export function setToken(token: string) {
   localStorage.setItem(TOKEN_STORE_KEY, token)
 }
 
-export function removeToken() {
-  localStorage.removeItem(TOKEN_STORE_KEY)
-  clearCache()
+export function clearUserData() {
+  localStorage.clear()
 }
 
-export function useToken(): [string, Setter<string>, () => void] {
+export function useToken(): [string, (token: string) => void] {
   const [token, setTokenState] = useState<string>(getToken() || '')
-  useEffect(() => setToken(token), [token])
   return [
     token,
-    setTokenState,
-    () => {
-      removeToken()
-      setTokenState('')
+    token => {
+      setToken(token)
+      setTokenState(token)
     },
   ]
 }
 
 export function fetchLogin(username: string, password: string): Promise<string> {
-  removeToken()
+  clearUserData()
   return new Promise<string>((resolve, reject) => {
     requestPost<string>('/api/user/login', { username, password })
       .then(result => resolve(result.data))

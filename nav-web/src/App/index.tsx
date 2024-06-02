@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { css } from '@emotion/css'
-import { clearCache } from '../util/request'
 import { useBookmarks } from '../util/bookmark'
 import { getRedirectHref } from '../util/search'
-import { useToken } from '../util/security'
+import { useToken, clearUserData } from '../util/security'
 import { isNotBlank } from '../util/string'
 import SearchLogo from './SearchLogo'
 import SearchInput from './SearchInput'
@@ -14,7 +13,7 @@ import ModalLogin from './ModalLogin'
 import ModalBookmark from './ModalBookmark'
 
 export default function App() {
-  const [token, setToken, removeToken] = useToken()
+  const [token, setToken] = useToken()
   const [bookmarks, setBookmarks, fetchBookmarks, saveBookmarks, fetchingBookmarks] = useBookmarks()
 
   const [search, setSearch] = useState('')
@@ -23,10 +22,6 @@ export default function App() {
   const [showAdd, setShowAdd] = useState(false)
 
   const [editing, setEditing] = useState(false)
-
-  useEffect(() => {
-    token && fetchBookmarks()
-  }, [token])
 
   return (
     <div className={Style.container}>
@@ -45,9 +40,12 @@ export default function App() {
         loggedIn={isNotBlank(token)}
         editing={editing}
         onLogin={() => setShowLogin(true)}
-        onLogout={removeToken}
+        onLogout={() => {
+          setToken('')
+          setBookmarks([])
+          clearUserData()
+        }}
         onRefresh={() => {
-          clearCache()
           setBookmarks([])
           fetchBookmarks()
         }}
@@ -61,6 +59,7 @@ export default function App() {
         show={showLogin}
         onSuccess={token => {
           setToken(token)
+          fetchBookmarks()
           setShowLogin(false)
         }}
         onClose={() => setShowLogin(false)}

@@ -1,18 +1,6 @@
 import axios, { Method } from 'axios'
-import { setupCache, buildWebStorage } from 'axios-cache-interceptor'
 import jsonp from 'jsonp'
-import { removeToken, getToken, TOKEN_REQUEST_KEY } from './security'
-
-const CACHE_KEY_PREFIX = 'axios-cache@'
-
-const Requester = setupCache(axios, {
-  storage: buildWebStorage(localStorage, CACHE_KEY_PREFIX),
-  ttl: 7 * 24 * 60 * 60 * 1000,
-})
-
-function toKey(url: string, method: Method, params?: { [key: string]: string }, data?: object) {
-  return `${method}-${url}-${JSON.stringify(params)}-${JSON.stringify(data)}`
-}
+import { getToken, clearUserData, TOKEN_REQUEST_KEY } from './security'
 
 export type Result<E> = {
   code: 200 | 500 | 400
@@ -34,8 +22,7 @@ export function request<E>({
   alertFailed?: boolean
 }): Promise<Result<E>> {
   return new Promise<Result<E>>((resolve, reject) => {
-    Requester.request<Result<E>>({
-      id: toKey(url, method, params, data),
+    axios.request<Result<E>>({
       url,
       method,
       params,
@@ -47,9 +34,9 @@ export function request<E>({
         const data = response.data
         if (data.code === 400) {
           if (getToken()) {
-            removeToken()
             location.reload()
           }
+          clearUserData()
           reject(data)
           return
         }
@@ -71,12 +58,6 @@ export function request<E>({
         reject(error)
       })
   })
-}
-
-export function clearCache() {
-  Object.keys(localStorage)
-    .filter(key => key.startsWith(CACHE_KEY_PREFIX))
-    .forEach(key => localStorage.removeItem(key))
 }
 
 export function requestGet<E>(

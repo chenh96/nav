@@ -12,14 +12,14 @@ export default function SearchInput({
   onInput: (value: string) => void
   onSearch: () => void
 }) {
-  const [focused, setFocused] = useState(false)
+  const [focused, setFocused] = useState(true)
 
   return (
     <div className={Style.container}>
       <input
         autoFocus
         type="text"
-        className={Style.input}
+        className={Style.input(focused)}
         value={value}
         onInput={e => onInput(e.currentTarget.value)}
         onFocus={() => setFocused(true)}
@@ -39,22 +39,20 @@ const Style = {
     height: '40px',
     marginTop: '8px',
   }),
-  input: css({
-    width: '100%',
-    height: '100%',
-    padding: '0 40px 0 8px',
-    backgroundColor: 'rgba(244, 245, 246)',
-    border: '2px solid rgba(40, 50, 60, 0.2)',
-    borderRadius: '4px',
-    outline: 'none',
-    transition: 'border 0.2s ease',
-    ':hover': {
-      border: '2px solid rgba(40, 50, 60, 0.4)',
-    },
-    ':focus': {
-      border: '2px solid rgba(0, 100, 200)',
-    },
-  }),
+  input: (focused: boolean) =>
+    css({
+      width: '100%',
+      height: '100%',
+      padding: '0 40px 0 8px',
+      backgroundColor: 'rgba(244, 245, 246)',
+      border: focused ? '2px solid rgba(0, 100, 200)' : '2px solid rgba(40, 50, 60, 0.2)',
+      borderRadius: '4px',
+      outline: 'none',
+      transition: 'border 0.2s ease',
+      ':hover': {
+        border: focused ? '2px solid rgba(0, 100, 200)' : '2px solid rgba(40, 50, 60, 0.4)',
+      },
+    }),
   button: (focused: boolean) =>
     css({
       display: 'inline-flex',
