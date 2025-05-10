@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { css } from '@emotion/css'
-import { useBookmarks } from '../util/bookmark'
+import { newEmpty, useBookmarks } from '../util/bookmark'
 import { getRedirectHref } from '../util/search'
 import { useToken, clearUserData } from '../util/security'
 import { isNotBlank } from '../util/string'
@@ -53,6 +53,7 @@ export default function App() {
         onCancel={() => fetchBookmarks().then(() => setEditing(false))}
         onSave={() => saveBookmarks().then(() => setEditing(false))}
         onAdd={() => setShowAdd(true)}
+        onEmpty={() => setBookmarks(prev => [...prev, newEmpty()])}
       />
 
       <ModalLogin

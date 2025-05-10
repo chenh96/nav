@@ -3,6 +3,7 @@ import { requestGet, requestPost } from './request'
 import { isNotBlank } from './string'
 import { getToken } from './security'
 import { Setter } from './type'
+import { nanoid } from 'nanoid'
 
 const BOOKMARK_STORE_KEY = 'Bookmarks'
 
@@ -12,6 +13,19 @@ export type Bookmark = {
   url: string
   icon: string
   sort?: number
+}
+
+export function isEmpty(bookmark: Bookmark) {
+  return bookmark.url === '_blank'
+}
+
+export function newEmpty(): Bookmark {
+  return {
+    id: nanoid(),
+    name: 'Empty',
+    url: '_blank',
+    icon: '4rem',
+  }
 }
 
 function getCachedBookmarks(): Bookmark[] | null {

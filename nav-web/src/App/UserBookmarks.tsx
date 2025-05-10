@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css'
-import { Bookmark } from '../util/bookmark'
+import { Bookmark, isEmpty } from '../util/bookmark'
 import { copyOf } from '../util/bean'
 import { Setter } from '../util/type'
 import { ReactSortable } from 'react-sortablejs'
@@ -28,9 +28,13 @@ function NormalBookmarks({ bookmarks }: { bookmarks: Bookmark[] }) {
 }
 
 function NormalBookmark({ bookmark }: { bookmark: Bookmark }) {
-  return (
-    <a href={bookmark.url} className={Style.col}>
-      {!bookmark.icon || <img src={bookmark.icon} draggable={false} />}
+  return isEmpty(bookmark) ? (
+    <div className={Style.col(bookmark)}>
+      <span>{bookmark.name}</span>
+    </div>
+  ) : (
+    <a href={bookmark.url} className={Style.col(bookmark)}>
+      <img src={bookmark.icon} draggable={false} />
       <span>{bookmark.name}</span>
     </a>
   )
@@ -57,13 +61,21 @@ function SortBookmarks({ bookmarks, onChange }: { bookmarks: Bookmark[]; onChang
 }
 
 function SortBookmark({ bookmark, onRemove }: { bookmark: Bookmark; onRemove: () => void }) {
-  return (
-    <div className={cx(Style.col, Style.sortCol)}>
+  return isEmpty(bookmark) ? (
+    <div className={cx(Style.col(bookmark), Style.sortCol)}>
       <button className={Style.closer} onClick={onRemove}>
         <MdClose color="rgba(0, 0, 0, 0.4)" />
       </button>
 
-      {!bookmark.icon || <img src={bookmark.icon} draggable={false} />}
+      <span>{bookmark.name}</span>
+    </div>
+  ) : (
+    <div className={cx(Style.col(bookmark), Style.sortCol)}>
+      <button className={Style.closer} onClick={onRemove}>
+        <MdClose color="rgba(0, 0, 0, 0.4)" />
+      </button>
+
+      <img src={bookmark.icon} draggable={false} />
 
       <span>{bookmark.name}</span>
     </div>
@@ -77,47 +89,52 @@ const Style = {
     maxHeight: 'calc(100% - 152px)',
     overflow: 'auto',
   }),
-  col: css({
-    display: 'inline-block',
-    margin: '0 8px 8px 0',
-    border: '1px solid rgba(40, 50, 60, 0.2)',
-    borderRadius: '15px',
-    backgroundColor: 'rgba(244, 245, 246)',
-    lineHeight: '28px',
-    color: 'inherit',
-    textDecoration: 'none',
-    cursor: 'pointer',
-    transition: 'background-color 0.1s ease',
-    ':hover': {
-      backgroundColor: 'rgba(234, 235, 236)',
-    },
-    ':active': {
-      backgroundColor: 'rgba(214, 215, 216)',
-    },
-    '> svg': {
-      width: '16px',
-      height: '16px',
-      margin: '6px',
-      verticalAlign: 'top',
-    },
-    '> img': {
-      width: '20px',
-      height: '20px',
-      margin: '4px -4px 4px 8px',
-      verticalAlign: 'top',
-      borderRadius: '2px',
-    },
-    '> span': {
-      verticalAlign: 'top',
+  col: (bookmark: Bookmark) =>
+    css({
       display: 'inline-block',
-      margin: '0 8px',
-      maxWidth: '256px',
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      textOverflow: 'ellipsis',
-    },
-  }),
+      margin: '0 8px 8px 0',
+      width: isEmpty(bookmark) ? bookmark.icon : 'auto',
+      border: '1px solid rgba(40, 50, 60, 0.2)',
+      borderRadius: '15px',
+      backgroundColor: 'rgba(244, 245, 246)',
+      lineHeight: '28px',
+      color: 'inherit',
+      textDecoration: 'none',
+      cursor: isEmpty(bookmark) ? 'default' : 'pointer',
+      opacity: isEmpty(bookmark) ? 0 : 1,
+      transition: 'background-color 0.1s ease',
+      ':hover': {
+        backgroundColor: 'rgba(234, 235, 236)',
+      },
+      ':active': {
+        backgroundColor: 'rgba(214, 215, 216)',
+      },
+      '> svg': {
+        width: '16px',
+        height: '16px',
+        margin: '6px',
+        verticalAlign: 'top',
+      },
+      '> img': {
+        width: '20px',
+        height: '20px',
+        margin: '4px -4px 4px 8px',
+        verticalAlign: 'top',
+        borderRadius: '2px',
+      },
+      '> span': {
+        opacity: isEmpty(bookmark) ? 0 : 1,
+        verticalAlign: 'top',
+        display: 'inline-block',
+        margin: '0 8px',
+        maxWidth: '256px',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+      },
+    }),
   sortCol: css({
+    opacity: 1,
     position: 'relative',
     cursor: 'grab',
     ':hover': {
