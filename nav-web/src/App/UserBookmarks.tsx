@@ -84,15 +84,16 @@ function SortBookmark({ bookmark, onRemove }: { bookmark: Bookmark; onRemove: ()
 
 const Style = {
   container: css({
-    margin: '0 -8px 0 0',
-    padding: '8px 0 0 0',
+    margin: '0px -4px',
+    padding: '4px 0 0 0',
     maxHeight: 'calc(100% - 152px)',
-    overflow: 'auto',
+    overflow:'visible',
+    textAlign: 'center',
   }),
   col: (bookmark: Bookmark) =>
     css({
       display: 'inline-block',
-      margin: '0 8px 8px 0',
+      margin: '4px',
       width: isEmpty(bookmark) ? bookmark.icon : 'auto',
       border: '1px solid rgba(40, 50, 60, 0.2)',
       borderRadius: '15px',
@@ -127,6 +128,7 @@ const Style = {
         verticalAlign: 'top',
         display: 'inline-block',
         margin: '0 8px',
+        width: 'calc(100% - 40px)',
         maxWidth: '256px',
         overflow: 'hidden',
         whiteSpace: 'nowrap',

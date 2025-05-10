@@ -24,7 +24,7 @@ export function newEmpty(): Bookmark {
     id: nanoid(),
     name: 'Empty',
     url: '_blank',
-    icon: '4rem',
+    icon: '64px',
   }
 }
 
