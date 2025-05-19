@@ -9,6 +9,7 @@ import {
   MdEditOff,
   MdCloudUpload,
   MdBookmarkAdd,
+  MdOutlineAddBox,
 } from 'react-icons/md'
 
 export default function OperatorsBar({
@@ -22,6 +23,7 @@ export default function OperatorsBar({
   onCancel,
   onSave,
   onAdd,
+  onEmpty,
 }: {
   fetchingBookmarks: boolean
   loggedIn: boolean
@@ -33,6 +35,7 @@ export default function OperatorsBar({
   onCancel: () => void
   onSave: () => void
   onAdd: () => void
+  onEmpty: () => void
 }) {
   return (
     <div className={Style.container}>
@@ -69,6 +72,11 @@ export default function OperatorsBar({
       {loggedIn && editing && (
         <Operator onClick={onAdd} loading={fetchingBookmarks}>
           <MdBookmarkAdd color="#08a" />
+        </Operator>
+      )}
+      {loggedIn && editing && (
+        <Operator onClick={onEmpty} loading={fetchingBookmarks}>
+          <MdOutlineAddBox color="#00d" />
         </Operator>
       )}
     </div>
