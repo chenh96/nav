@@ -9,13 +9,17 @@ import tech.chenh.nav.exception.MessagedException;
 import tech.chenh.nav.model.LoginForm;
 import tech.chenh.nav.util.Security;
 
-import java.util.*;
+import java.util.Date;
 
 @Service
 public class AccountService {
 
+    private final AccountRepo accountRepo;
+
     @Autowired
-    private AccountRepo accountRepo;
+    public AccountService(AccountRepo accountRepo) {
+        this.accountRepo = accountRepo;
+    }
 
     public Account findByUsername(String username) {
         return accountRepo.findFirstByUsername(username);
