@@ -10,6 +10,7 @@ import {
   MdCloudUpload,
   MdBookmarkAdd,
   MdOutlineAddBox,
+  MdOutlineBookmarkAdd,
 } from 'react-icons/md'
 
 export default function OperatorsBar({
@@ -76,7 +77,7 @@ export default function OperatorsBar({
       )}
       {loggedIn && editing && (
         <Operator onClick={onEmpty} loading={fetchingBookmarks}>
-          <MdOutlineAddBox color="#00d" />
+          <MdOutlineBookmarkAdd color="#00d" />
         </Operator>
       )}
     </div>
