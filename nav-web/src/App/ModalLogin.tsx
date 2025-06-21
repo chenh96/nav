@@ -7,7 +7,7 @@ import Modal from '../comp/Modal'
 import Input from '../comp/Input'
 import Button from '../comp/Button'
 
-export default function ModallLogin({
+export default function ModalLogin({
   show,
   onSuccess,
   onClose,
