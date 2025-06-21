@@ -1,4 +1,4 @@
-import axios, { Method } from 'axios'
+import axios, { Method, AxiosError } from 'axios'
 import jsonp from 'jsonp'
 import { getToken, clearUserData, TOKEN_REQUEST_KEY } from './security'
 
@@ -51,7 +51,7 @@ export function request<E>({
 
         resolve(data)
       })
-      .catch(error => {
+      .catch((error: AxiosError) => {
         if (alertFailed) {
           alert('服务器请求异常')
         }

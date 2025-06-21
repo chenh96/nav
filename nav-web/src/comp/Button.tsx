@@ -1,4 +1,5 @@
 import { css, cx } from '@emotion/css'
+import { ReactNode } from 'react'
 
 export default function Button({
   type = 'Normal',
@@ -9,7 +10,7 @@ export default function Button({
 }: {
   type?: 'Normal' | 'Blue'
   onClick: () => void
-  children: any
+  children: ReactNode
   className?: string
   disabled?: boolean
 }) {

@@ -7,5 +7,5 @@ export function isNotBlank(str: string | undefined | null) {
 }
 
 export function isNumber(str: string | undefined | null) {
-  return isNotBlank(str) && !!str!!.match('[0-9]+')
+  return isNotBlank(str) && !!str!.match(/^[0-9]+$/)
 }

@@ -17,8 +17,8 @@ export function clearUserData() {
   localStorage.clear()
 }
 
-export function useToken(): [string, (token: string) => void] {
-  const [token, setTokenState] = useState<string>(getToken() || '')
+export function useToken(): [string | null, (token: string) => void] {
+  const [token, setTokenState] = useState<string | null>(getToken())
   return [
     token,
     token => {
