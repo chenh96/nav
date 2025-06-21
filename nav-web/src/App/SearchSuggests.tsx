@@ -1,16 +1,55 @@
-import { startTransition, useEffect, useState } from 'react'
+import { startTransition, useEffect, useState, useRef } from 'react'
 import { css } from '@emotion/css'
 import { fetchSuggests, getRedirectHref } from '../util/search'
+import { useDebounce } from '../util/debounce'
 
 export default function SearchSuggests({ search }: { search: string }) {
   const [suggests, setSuggests] = useState<string[]>([])
-  const [timestamp, setTimestamp] = useState(new Date().getTime())
+  const abortControllerRef = useRef<AbortController | null>(null)
+
+  // 使用防抖，延迟150ms
+  const debouncedSearch = useDebounce(search, 200)
 
   useEffect(() => {
-    const now = new Date().getTime()
-    setTimestamp(now)
-    fetchSuggests(search).then(response => now >= timestamp && startTransition(() => setSuggests(response)))
-  }, [search])
+    // 如果搜索词为空，清空建议
+    if (!debouncedSearch.trim()) {
+      setSuggests([])
+      return
+    }
+
+    // 取消之前的请求
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+
+    // 创建新的 AbortController
+    abortControllerRef.current = new AbortController()
+
+    fetchSuggests(debouncedSearch, abortControllerRef.current.signal)
+      .then(response => {
+        // 检查请求是否被取消
+        if (!abortControllerRef.current?.signal.aborted) {
+          startTransition(() => {
+            setSuggests(response)
+          })
+        }
+      })
+      .catch(error => {
+        // 忽略被取消的请求错误，静默处理其他错误
+        if (error.name !== 'AbortError' && error.message !== 'Request aborted') {
+          console.error('搜索建议请求失败:', error)
+        }
+      })
+  }, [debouncedSearch])
+
+  // 组件卸载时取消请求
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+    }
+  }, [])
 
   return (
     <div className={Style.container(suggests.length * 34 + 6)}>
