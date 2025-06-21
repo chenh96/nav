@@ -7,7 +7,6 @@ export default function SearchSuggests({ search }: { search: string }) {
   const [suggests, setSuggests] = useState<string[]>([])
   const abortControllerRef = useRef<AbortController | null>(null)
 
-  // 使用防抖，延迟150ms
   const debouncedSearch = useDebounce(search, 200)
 
   useEffect(() => {
