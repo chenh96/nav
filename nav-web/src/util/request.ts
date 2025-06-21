@@ -86,7 +86,6 @@ export function jsonpGet<R>(url: string): Promise<R> {
   return new Promise<R>((resolve, reject) => {
     jsonp(url, (err, data) => {
       if (err) {
-        console.error(err)
         reject(err)
       } else {
         resolve(data as R)

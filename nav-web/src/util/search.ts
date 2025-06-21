@@ -2,7 +2,6 @@ import { jsonpGet } from './request'
 
 export function fetchSuggests(search: string, signal?: AbortSignal): Promise<string[]> {
   return new Promise<string[]>((resolve, reject) => {
-    // 检查是否已取消
     if (signal?.aborted) {
       reject(new Error('Request aborted'))
       return
@@ -12,7 +11,6 @@ export function fetchSuggests(search: string, signal?: AbortSignal): Promise<str
     
     promise
       .then(response => {
-        // 再次检查是否已取消
         if (signal?.aborted) {
           reject(new Error('Request aborted'))
           return
@@ -27,7 +25,6 @@ export function fetchSuggests(search: string, signal?: AbortSignal): Promise<str
         }
       })
 
-    // 监听取消信号
     if (signal) {
       signal.addEventListener('abort', () => {
         reject(new Error('Request aborted'))
