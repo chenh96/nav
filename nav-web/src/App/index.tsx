@@ -86,6 +86,7 @@ const Style = {
     top: '15%',
     bottom: '8px',
     width: '600px',
+    maxWidth: 'calc(100% - 16px)',
     margin: 'auto',
     fontSize: '16px',
     '*': {

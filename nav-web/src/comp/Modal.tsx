@@ -78,6 +78,7 @@ const Style = {
       top: '25%',
       margin: 'auto',
       width: '400px',
+      maxWidth: 'calc(100% - 16px)',
       backgroundColor: 'rgba(255, 255, 255)',
       border: '1px solid rgba(40, 50, 60, 0.4)',
       borderRadius: '8px',
